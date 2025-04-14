@@ -4,8 +4,9 @@ const searchForm = document.querySelector('.app-header-search');
 const searchList = document.getElementById('search-list');
 
 let activeTab = 1;
+let allData = [];
 
-
+// Initializer
 const init = () => {
     updateActiveTab();
 };
@@ -18,6 +19,7 @@ const updateActiveTab = () => {
     });
 };
 
+// Tab switching
 allTabsHead.forEach(tabHead => {
   tabHead.addEventListener('click', () => {
       activeTab = +tabHead.dataset.id;
@@ -25,13 +27,19 @@ allTabsHead.forEach(tabHead => {
   });
 });
 
+// Search submit
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const searchText = searchForm.search.value.trim();
   if (searchText) fetchAllSuperHero(searchText);
 });
 
-
+// Keyup search
+searchForm.search.addEventListener('keyup', () => {
+  const searchValue = searchForm.search.value.trim();
+  if (searchValue.length > 1) fetchAllSuperHero(searchValue);
+  else searchList.innerHTML = '';
+});
 
 // Fetch superhero data from API
 const fetchAllSuperHero = async (searchText) => {
@@ -41,12 +49,15 @@ const fetchAllSuperHero = async (searchText) => {
         allData = await response.json();
         if (allData.response === 'success') {
             showSearchList(allData.results); 
+        } else {
+            searchList.innerHTML = `<div class="search-list-item">No hero found 😢</div>`;
         }
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 };
 
+// Show list
 const showSearchList = (data) => {
   searchList.innerHTML = data.map(({ id, name, image }) => `
       <div class="search-list-item">
@@ -56,12 +67,7 @@ const showSearchList = (data) => {
   `).join('');
 };
 
-searchForm.search.addEventListener('keyup', () => {
-  const searchValue = searchForm.search.value.trim();
-  if (searchValue.length > 1) fetchAllSuperHero(searchValue);
-  else searchList.innerHTML = '';
-});
-
+// When click on result item
 searchList.addEventListener('click', (event) => {
   const selectedHero = allData.results.find(hero => hero.id === event.target.dataset.id);
   if (selectedHero) {
@@ -70,9 +76,7 @@ searchList.addEventListener('click', (event) => {
   }
 });
 
-
-
-
+// Show details
 const showSuperheroDetails = (data) => {
   const { image, name, powerstats, biography, appearance, connections } = data;
 
@@ -100,15 +104,10 @@ const showSuperheroDetails = (data) => {
       return statsList;
   };
 
-  const powerstatsElement = document.getElementsByClassName('powerstats')[0];
-  powerstatsElement.innerHTML = createStatsList(powerstats);
+  document.querySelector('.powerstats').innerHTML = createStatsList(powerstats);
+  document.querySelector('.biography').innerHTML = createStatsList(biography);
+  document.querySelector('.appearance').innerHTML = createStatsList(appearance);
+  document.querySelector('.connections').innerHTML = createStatsList(connections);
+};
 
-  const biographyElement = document.getElementsByClassName('biography')[0];
-  biographyElement.innerHTML = createStatsList(biography);
-
-  const appearanceElement = document.getElementsByClassName('appearance')[0];
-  appearanceElement.innerHTML = createStatsList(appearance);
-
-  const connectionsElement = document.getElementsByClassName('connections')[0];
-  connectionsElement.innerHTML = createStatsList(connections);
-}
+document.addEventListener("DOMContentLoaded", init);

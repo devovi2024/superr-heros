@@ -1,0 +1,19 @@
+{
+  "name": "superhero2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "functionality"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devovi2024/superr-heros.git"
+  },
+  "author": "ovi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devovi2024/superr-heros/issues"
+  },
+  "homepage": "https://github.com/devovi2024/superr-heros#readme",
+  "description": ""
+}
